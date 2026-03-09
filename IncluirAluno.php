@@ -1,12 +1,11 @@
 <?php
     $msg = ""; 
-//função explode
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST')  {
     $matricula = $_POST["matricula"];
     $nome = $_POST["nome"];
     $email = $_POST["email"];
     
-    // Corrigido o echo para exibir a variável $sigla que faltava
     echo "Matricula: " . $matricula . " Nome: " . $nome . " Email: " . $email;
 
    if (!file_exists("alunos.txt")) {
@@ -17,8 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')  {
    }
    
    $arqDisc = fopen("alunos.txt","a") or die("erro ao criar arquivo");
-   //   $arqDisc = fopen("disciplinas.txt","w") or die("erro ao criar arquivo");
-   //   $linha = "nome;sigla;carga\n";
    $linha = $matricula . ";" . $nome . ";" . $email . "\n";
    fwrite($arqDisc,$linha);
    fclose($arqDisc);
@@ -32,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')  {
 </head>
 <body>
 <h1>Matricular Aluno</h1>
-<form action="form.php" method="POST">
+<form action="IncluirAluno.php" method="POST">
     Matricula: <input type="text" name="matricula">
     <br><br>
     Nome: <input type="text" name="nome">
