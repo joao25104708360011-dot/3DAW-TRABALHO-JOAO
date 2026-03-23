@@ -40,7 +40,7 @@
                 $novo .= "{$mat};{$nome};{$email}\n";
             }
             else {
-                $novo .= $linha; // Mantém a linha original
+                $novo .= $linha;
             }
         }
     file_put_contents("alunos.txt", $novo);
