@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Excluir Perguntas Discursivas.</title>
+    <script>
+        let perguntaParaExcluir = null;
+
+        function procurar(event) {
+            event.preventDefault();
+            const num = document.getElementById('numBusca').value;
+            const perguntas = JSON.parse(localStorage.getItem('perguntas') || '[]');
+            perguntaParaExcluir = perguntas.find(p => p.numero == num);
+
+            if (perguntaParaExcluir) {
+                document.getElementById('areaExclusao').style.display = 'block';
+                document.getElementById('infoPerg').innerHTML = `
+                    <tr><td>${perguntaParaExcluir.numero}</td><td>${perguntaParaExcluir.pergunta}</td><td>${perguntaParaExcluir.resposta}</td></tr>`;
+            } else { alert("Pergunta não encontrada."); }
+        }
+
+        function excluir() {
+            let perguntas = JSON.parse(localStorage.getItem('perguntas') || '[]');
+            perguntas = perguntas.filter(p => p.numero != perguntaParaExcluir.numero);
+            localStorage.setItem('perguntas', JSON.stringify(perguntas));
+            alert("Registro Excluido com sucesso.");
+            window.location.reload();
+        }
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h1>Exclusão de Perguntas discursivas.</h1>
+    <form onsubmit="procurar(event)">
+        <label>Digite o Numero da Pergunta: </label>
+        <input type="text" id="numBusca" required>
+        <input type="submit" value="Procurar">
+    </form>
+
+    <div id="areaExclusao" style="display:none;">
+        <table border="1">
+            <tr><th>Numero</th><th>Pergunta</th><th>Resposta</th></tr>
+            <tbody id="infoPerg"></tbody>
+        </table>
+        <button onclick="excluir()">Confirmar Exclusão</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Perguntas Discursivas.</title>
+    <script>
+        function salvar(event) {
+            event.preventDefault();
+            const num = document.getElementById('num').value;
+            const perg = document.getElementById('perg').value;
+            const resp = document.getElementById('resp').value;
+
+            let perguntas = JSON.parse(localStorage.getItem('perguntas') || '[]');
+            perguntas.push({ numero: num, pergunta: perg, resposta: resp });
+            localStorage.setItem('perguntas', JSON.stringify(perguntas));
+            
+            alert("Cadastro de Pergunta Concluido.");
+            event.target.reset();
+        }
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h1>Cadastro de Perguntas discursivas.</h1>
+    <form onsubmit="salvar(event)">
+        <label for="num">Numero: </label>
+        <input type="text" id="num" required>
+        <label for="perg">Pergunta: </label>
+        <input type="text" id="perg" required>
+        <label for="resp">Resposta: </label>
+        <input type="text" id="resp" required>
+        <input type="submit" value="Cadastrar">
+    </form>
+</body>
+</html>

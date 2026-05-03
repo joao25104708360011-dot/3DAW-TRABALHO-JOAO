@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Listar Perguntas</title>
+    <script>
+        function buscar(event) {
+            event.preventDefault();
+            const tipo = document.getElementById('tipo').value;
+            const num = document.getElementById('num').value;
+            const banco = tipo == '1' ? 'perguntas' : 'perguntasMulti';
+            const dados = JSON.parse(localStorage.getItem(banco) || '[]');
+            const perg = dados.find(p => p.numero == num);
+
+            const area = document.getElementById('resultado');
+            if (perg) {
+                let html = `<table border="1"><tr><th>Numero</th><th>Pergunta</th>`;
+                if (tipo == '2') {
+                    html += `<th>Opção 1</th><th>Opção 2</th><th>Opção 3</th><th>Opção Correta</th></tr>`;
+                    html += `<tr><td>${perg.numero}</td><td>${perg.pergunta}</td><td>${perg.op1}</td><td>${perg.op2}</td><td>${perg.op3}</td><td>${perg.optrue}</td></tr></table>`;
+                } else {
+                    html += `<th>Resposta</th></tr>`;
+                    html += `<tr><td>${perg.numero}</td><td>${perg.pergunta}</td><td>${perg.resposta}</td></tr></table>`;
+                }
+                area.innerHTML = "<h3>Dados da Pergunta:</h3>" + html;
+            } else { alert("Pergunta não encontrada."); }
+        }
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h1>Listagem de Pergunta Unica.</h1>
+    <form onsubmit="buscar(event)">
+        <label>Digite o tipo (1 discursiva/ 2 multipla): </label>
+        <input type="text" id="tipo" required>
+        <label>Numero da Pergunta: </label>
+        <input type="text" id="num" required>
+        <input type="submit" value="Procurar">
+    </form>
+    <div id="resultado"></div>
+</body>
+</html>

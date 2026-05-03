@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Usuario.</title>
+    <script>
+        function salvar(event) {
+            event.preventDefault();
+            const id = document.getElementById('id').value;
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+
+            let usuarios = JSON.parse(localStorage.getItem('cadastro') || '[]');
+            usuarios.push({ id, nome, email });
+            localStorage.setItem('cadastro', JSON.stringify(usuarios));
+            
+            alert("Cadastro Concluido.");
+            event.target.reset();
+        }
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h1>Cadastro de Usuarios.</h1>
+    <form onsubmit="salvar(event)">
+        <label for="id">ID: </label>
+        <input type="text" id="id" required>
+        <label for="nome">Nome: </label>
+        <input type="text" id="nome" required>
+        <label for="email">Email: </label>
+        <input type="text" id="email" required>
+        <input type="submit" value="Cadastrar">
+    </form>
+</body>
+</html>

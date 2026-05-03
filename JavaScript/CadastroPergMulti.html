@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Pergunta Multipla</title>
+</head>
+<body>
+    <button onclick="location.href='main.html'">Voltar</button>
+    <h1>Cadastro de Perguntas de Múltipla Escolha</h1>
+    
+    <form id="formMulti">
+        Número: <input type="text" id="num" required><br>
+        Pergunta: <input type="text" id="perg" required><br>
+        Opção 1: <input type="text" id="op1" required><br>
+        Opção 2: <input type="text" id="op2" required><br>
+        Opção 3: <input type="text" id="op3" required><br>
+        Correta: <input type="text" id="optrue" required><br>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <script>
+        document.getElementById('formMulti').onsubmit = function(e) {
+            e.preventDefault();
+            
+            const dados = JSON.parse(localStorage.getItem('perguntasMulti') || '[]');
+            
+            const novaPerg = {
+                numero: document.getElementById('num').value,
+                pergunta: document.getElementById('perg').value,
+                opcoes: [
+                    document.getElementById('op1').value,
+                    document.getElementById('op2').value,
+                    document.getElementById('op3').value
+                ],
+                correta: document.getElementById('optrue').value
+            };
+
+            dados.push(novaPerg);
+            
+            localStorage.setItem('perguntasMulti', JSON.stringify(dados));
+            alert("Cadastro Concluído!");
+            this.reset();
+        };
+    </script>
+</body>
+</html>

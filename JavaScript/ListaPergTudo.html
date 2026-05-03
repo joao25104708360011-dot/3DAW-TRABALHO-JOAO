@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Perguntas</title>
+    <script>
+        window.onload = function() {
+            const disc = JSON.parse(localStorage.getItem('perguntas') || '[]');
+            const multi = JSON.parse(localStorage.getItem('perguntasMulti') || '[]');
+            
+            const tabelaDis = document.getElementById('tabelaDiscursivas');
+            disc.forEach(p => {
+                tabelaDis.innerHTML += `<tr><td>${p.numero}</td><td>${p.pergunta}</td><td>${p.resposta}</td></tr>`;
+            });
+
+            const tabelaMulti = document.getElementById('tabelaMulti');
+            multi.forEach(p => {
+                tabelaMulti.innerHTML += `<tr><td>${p.numero}</td><td>${p.pergunta}</td><td>${p.op1}</td><td>${p.op2}</td><td>${p.op3}</td><td>${p.optrue}</td></tr>`;
+            });
+        };
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h2>---Perguntas Discursivas---</h2>
+    <table border="1" id="tabelaDiscursivas">
+        <tr><th>Numero</th><th>Pergunta</th><th>Resposta</th></tr>
+    </table>
+
+    <h2>---Perguntas de Multipla Escolha---</h2>
+    <table border="1" id="tabelaMulti">
+        <tr><th>Numero</th><th>Pergunta</th><th>Opção 1</th><th>Opção 2</th><th>Opção 3</th><th>Opção Correta</th></tr>
+    </table>
+</body>
+</html>

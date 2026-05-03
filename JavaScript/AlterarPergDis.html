@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Alterar Perguntas Discursivas.</title>
+    <script>
+        let indexPerg = -1;
+        function procurar(event) {
+            event.preventDefault();
+            const num = document.getElementById('numBusca').value;
+            let perguntas = JSON.parse(localStorage.getItem('perguntas') || '[]');
+            indexPerg = perguntas.findIndex(p => p.numero == num);
+
+            if (indexPerg !== -1) {
+                document.getElementById('formAlterar').style.display = 'block';
+                document.getElementById('numExibido').innerText = perguntas[indexPerg].numero;
+                document.getElementById('novoPerg').value = perguntas[indexPerg].pergunta;
+                document.getElementById('novoResp').value = perguntas[indexPerg].resposta;
+            } else { alert("Pergunta não encontrada."); }
+        }
+
+        function confirmarAlteracao(event) {
+            event.preventDefault();
+            let perguntas = JSON.parse(localStorage.getItem('perguntas'));
+            perguntas[indexPerg].pergunta = document.getElementById('novoPerg').value;
+            perguntas[indexPerg].resposta = document.getElementById('novoResp').value;
+            localStorage.setItem('perguntas', JSON.stringify(perguntas));
+            alert("Registro Alterado com sucesso.");
+            location.reload();
+        }
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h1>Alteração de Perguntas discursivas.</h1>
+    <form onsubmit="procurar(event)">
+        <label>Digite o Numero da Pergunta: </label>
+        <input type="text" id="numBusca" required>
+        <input type="submit" value="Procurar">
+    </form>
+    <div id="formAlterar" style="display:none;">
+        <form onsubmit="confirmarAlteracao(event)">
+            <table border="1">
+                <tr><th>Numero</th><th>Pergunta</th><th>Resposta</th></tr>
+                <tr>
+                    <td id="numExibido"></td>
+                    <td><input type="text" id="novoPerg"></td>
+                    <td><input type="text" id="novoResp"></td>
+                </tr>
+            </table>
+            <input type="submit" value="Alterar">
+        </form>
+    </div>
+</body>
+</html>
