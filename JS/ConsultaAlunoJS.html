@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Consultar Aluno</title>
+    <script>
+        function Consultar() {
+            let matricula = document.getElementById("mat").value;
+            let xmlhttp = new XMLHttpRequest();
+
+            console.log("1 - Iniciando Busca");
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("2 - Resposta recebida");
+                    let aluno = JSON.parse(this.responseText);
+
+                    if (aluno.erro) {
+                        document.getElementById("msg").innerHTML = aluno.erro;
+                        document.getElementById("resultado").style.display = "none";
+                    } else {
+                        document.getElementById("resNome").innerHTML = aluno.nome;
+                        document.getElementById("resEmail").innerHTML = aluno.email;
+                        document.getElementById("resMat").innerHTML = aluno.matricula;
+                        
+                        document.getElementById("resultado").style.display = "block";
+                        document.getElementById("msg").innerHTML = "Busca concluída.";
+                    }
+                }
+            };
+            xmlhttp.open("GET", "BuscarAluno.php?mat=" + matricula);
+            xmlhttp.send();
+            console.log("4 - Enviado");
+        }
+    </script>
+    <style>
+        .card { display: none; border: 1px solid #000; padding: 15px; width: 300px; background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>Consultar Aluno</h1>
+    Matrícula: <input type="text" id="mat">
+    <input type="button" value="Buscar" onclick="Consultar();">
+    <hr>
+    <div id="resultado" class="card">
+        <p><strong>Matrícula:</strong> <span id="resMat"></span></p>
+        <p><strong>Nome:</strong> <span id="resNome"></span></p>
+        <p><strong>Email:</strong> <span id="resEmail"></span></p>
+    </div>
+    <p id="msg"></p>
+</body>
+</html>

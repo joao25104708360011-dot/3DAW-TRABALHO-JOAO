@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Excluir Aluno</title>
+    <script>
+        
+        function BuscarParaExcluir() {
+            let matricula = document.getElementById("mat").value;
+            let xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let aluno = JSON.parse(this.responseText);
+                    if (!aluno.erro) {
+                        document.getElementById("infoExcluir").innerHTML = 
+                            "Deseja realmente excluir o aluno: <b>" + aluno.nome + "</b>?";
+                        document.getElementById("btnExcluir").style.display = "block";
+                        document.getElementById("msg").innerHTML = "";
+                    } else {
+                        document.getElementById("msg").innerHTML = "Aluno não encontrado.";
+                        document.getElementById("btnExcluir").style.display = "none";
+                    }
+                }
+            };
+            xmlhttp.open("GET", "BuscarAluno.php?mat=" + matricula);
+            xmlhttp.send();
+        }
+
+        function ConfirmarExclusao() {
+            let matricula = document.getElementById("mat").value;
+            let obj = { matricula: matricula, acao: "excluir" };
+            
+            let xmlhttp = new XMLHttpRequest();
+            console.log("1 - Enviando ordem de exclusão");
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let resposta = JSON.parse(this.responseText);
+                    document.getElementById("msg").innerHTML = resposta.mensagem;
+                    document.getElementById("btnExcluir").style.display = "none";
+                    document.getElementById("infoExcluir").innerHTML = "";
+                    console.log("2 - Excluído com sucesso");
+                }
+            };
+
+            xmlhttp.open("POST", "ExcluirAluno.php");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(JSON.stringify(obj));
+        }
+    </script>
+</head>
+<body>
+    <h1>Excluir Aluno</h1>
+    <p>Digite a matrícula para localizar o registro:</p>
+    <input type="text" id="mat">
+    <input type="button" value="Localizar" onclick="BuscarParaExcluir();">
+    
+    <div id="confirmacao" style="margin-top:20px;">
+        <p id="infoExcluir" style="color: red;"></p>
+        <input type="button" id="btnExcluir" value="SIM, EXCLUIR AGORA" 
+               style="display:none; background-color: red; color: white;" 
+               onclick="ConfirmarExclusao();">
+    </div>
+    
+    <p id="msg"></p>
+</body>
+</html>

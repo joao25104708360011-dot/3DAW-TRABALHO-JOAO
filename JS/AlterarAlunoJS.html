@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Aluno</title>
+    <script>
+        function ConsultarAluno() {
+            let matricula = document.getElementById("mat").value;
+            let xmlhttp = new XMLHttpRequest();
+
+            console.log("1");
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou a resposta OK: " + this.responseText);
+                    console.log("2");
+                    document.getElementById("msg").innerHTML = this.responseText;
+
+                    let aluno = JSON.parse(this.responseText);
+
+                    if (aluno.erro) {
+                        document.getElementById("msg").innerHTML = aluno.erro;
+                        document.getElementById("areaEdicao").style.display = "none";
+                    } else {
+                        
+                        document.getElementById("nome").value = aluno.nome;
+                        document.getElementById("email").value = aluno.email;
+                        document.getElementById("mat_original").value = aluno.matricula;
+                        
+                        document.getElementById("areaEdicao").style.display = "block";
+                        document.getElementById("msg").innerHTML = "Aluno carregado via JSON!";
+                    }
+                }
+            };
+            xmlhttp.open("GET", "BuscarAluno.php?mat=" + matricula);
+            xmlhttp.send();
+            console.log("4");
+        }
+
+        function SalvarAlteracao() {
+            let alunoObj = {
+                matricula: document.getElementById("mat_original").value,
+                nome: document.getElementById("nome").value,
+                email: document.getElementById("email").value,
+                acao: "alterar"
+            };
+
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let resposta = JSON.parse(this.responseText);
+                    document.getElementById("msg").innerHTML = resposta.mensagem;
+                }
+            };
+
+            xmlhttp.open("POST", "AlterarAluno.php");
+           
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            
+            
+            xmlhttp.send(JSON.stringify(alunoObj));
+        }
+    </script>
+    <style>
+        table, th, td { border: 2px solid black; border-collapse: collapse; padding: 5px; }
+        #areaEdicao { display: none; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Alterar Aluno (Modo JSON)</h1>
+    <hr>
+    <div>
+        <label for="mat">Matrícula:</label>
+        <input type="text" id="mat">
+        <input type="button" value="Consultar" onclick="ConsultarAluno();">
+    </div>
+
+    <div id="areaEdicao">
+        <input type="hidden" id="mat_original">
+        <table>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+            </tr>
+            <tr>
+                <td><input type="text" id="nome"></td>
+                <td><input type="text" id="email"></td>
+            </tr>
+        </table>
+        <br>
+        <input type="button" value="Salvar Alterações" onclick="SalvarAlteracao();">
+    </div>
+
+    <p id="msg"></p>
+</body>
+</html>
