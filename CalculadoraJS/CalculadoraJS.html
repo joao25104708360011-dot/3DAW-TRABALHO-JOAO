@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <script>
+        function Calcula(){
+            let a = Number(document.getElementById('a').value);
+            let b = Number(document.getElementById('b').value);
+            let op = document.getElementById('op').value;
+            let result = 0;
+            let msg = "";
+            console.log("a: " + a + " b: " + b + " op: " + op);
+
+            if(op === "soma"){
+                msg = "Calcular: a (" + a + ") + b (" + b + ")";
+                result = a + b;
+            } else if (op === "sub"){
+                msg = "Calcular: a (" + a + ") - b (" + b + ")";
+                result = a - b;
+            } else if (op === "multi"){
+                msg = "Calcular: a (" + a + ") * b (" + b + ")";
+                result = a * b;
+            } else if (op === "divi"){
+                msg = "Calcular: a (" + a + ") / b (" + b + ")";
+                result = a / b;
+            } else if(op === "potencia"){
+                msg = "Calcular: a (" + a + ") ^ b (" + b + ")";
+                result = Math.pow(a, b);
+            } else if (op === "raiz"){
+                msg = "Calcular raiz: a (" + a + ")";
+                result = Math.sqrt(a);
+            } 
+
+            document.getElementById("msg").innerHTML = msg;
+            document.getElementById("res").innerHTML = "Resultado " + result;
+            console.log("Result: " + result);
+            console.log("5");
+        }
+    </script>
+</head>
+<body>
+    <h1>Minha Calculadora</h1>
+    <hr>
+        <form method="GET">
+        a: <input type="number" name='a' id='a'><br>
+        operador:
+        <select id="op">
+            <option value="soma">Soma</option>
+            <option value="sub">Subtração</option>
+            <option value="multi">Multiplicação</option>
+            <option value="divi">Divisão</option>
+            <option value="potencia">Potência</option>
+            <option value="raiz">Raiz Quadrada (de a)</option>
+        </select>
+        <br><br>
+        b: <input type="number" name='b' id='b'><br>
+        <br>
+        <button type="button" onclick="Calcula()">Calcular</button>
+    </form>
+
+    <hr>
+    <p id="msg"></p>
+    <h2 id="res">Resultado: </h2>
+</body>
+</html>
