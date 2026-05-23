@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de perguntas discursivas</title>
+    <script>
+        function CadastroPerg(){
+            let objForm = document.getElementById("formPerg");
+            console.log("objForm: " + objForm);
+
+            let num = document.getElementById("num").value;
+            let perg = document.getElementById("perg").value;
+            let resp = document.getElementById("resp").value;
+
+            if(!Validar(num, perg, resp)){
+                return;
+            }
+
+            console.log("Número: " + num + "/// Pergunta: " + perg + "/// Resposta: " + resp);
+
+            let objForm2 = {"numero": num,"pergunta": perg,"resposta": resp};
+            let objJson = JSON.stringify(objForm2);
+
+            console.log("objForm2: " + objForm2);
+            console.log("JSON: " + objJson);
+
+            let xmlhttp = new XMLHttpRequest();
+            console.log("1");
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou a resposta OK: " + this.responseText);
+                    console.log("2");
+                    document.getElementById("msg").innerHTML = this.responseText;
+                } else
+                    if (this.readyState < 4) {
+                        console.log("3: " + this.readyState);
+                    } else
+                        console.log("Requisicao falhou: " + this.status);
+            }
+            console.log("4");
+
+            xmlhttp.open("POST", "http://localhost/3DAW/CadastroPergDis.php");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(objJson);
+
+        }
+
+        function Validar(num, perg, resp){
+            const numRegex = /^([0-9]+$)/;
+            const textoRegex = /^[A-Za-zÀ-ÿ0-9\s\?\!\.\,\-\:\(\)]+$/;
+            
+            let erros = [];
+
+            if (!numRegex.test(num)) {
+                erros.push("Número inválido (use apenas números positivos e inteiros).");
+            }
+
+            if (!textoRegex.test(perg) || perg.length < 10) {
+                erros.push("Pergunta inválida (mínimo 10 letras).");
+            }
+
+            if (!textoRegex.test(resp)) {
+                erros.push("Formato de resposta inválida.");
+            }
+
+            if (erros.length > 0) {
+                document.getElementById("msg").innerHTML = erros.join("<br>");
+                document.getElementById("msg").style.color = "red";
+                return false;
+            }
+
+            return true;
+        }
+
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h1>Cadastro de Perguntas discursivas.</h1>
+    <form method="POST" name="formPerg" id="formPerg">
+        <label for="num">Numero: </label>
+        <input type="text" id="num" required>
+        <label for="perg">Pergunta: </label>
+        <input type="text" id="perg" required>
+        <label for="resp">Resposta: </label>
+        <input type="text" id="resp" required>
+        <input type="button" value="Cadastrar" onclick="return CadastroPerg();">
+    </form>
+
+    <hr>
+    <p id="msg"></p>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluir Perguntas Discursivas.</title>
+    <script>
+        function Buscar() {
+            let num = document.getElementById("num").value;
+            
+            if (!Validar(num)) {
+                return;
+            }    
+
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    
+                    let perg = JSON.parse(this.responseText);
+                    
+                    if (perg.encontrado) {
+                        
+                        document.getElementById("detalhes").innerHTML = `
+                            <thead>
+                                <tr><th>Número</th><th>Pergunta</th><th>Resposta</th><th>Ação</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${perg.numero}</td>
+                                    <td>${perg.pergunta}</td>
+                                    <td>${perg.resposta}</td>
+                                    <td><button onclick="Excluir('${perg.numero}')">Confirmar Exclusão</button></td>
+                                </tr>
+                            </tbody>`;
+                        document.getElementById("msg").innerHTML = "Registro encontrado.";
+                        document.getElementById("msg").style.color = "blue";
+                    } else {
+                        document.getElementById("msg").innerHTML = "Registro não encontrado.";
+                        document.getElementById("detalhes").innerHTML = "";
+                    }
+                }
+            };
+           
+            xmlhttp.open("GET", "BuscarPerg.php?num=" + num);
+            xmlhttp.send();
+        }
+
+        function Excluir(num){
+            
+            if(!Validar(num)){
+                return;
+            }
+
+            console.log("Número: " + num);
+
+            let objForm2 = {"numero": num};
+            let objJson = JSON.stringify(objForm2);
+
+            console.log("objForm2: " + objForm2);
+            console.log("JSON: " + objJson);
+
+            let xmlhttp = new XMLHttpRequest();
+            console.log("1");
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou a resposta OK: " + this.responseText);
+                    console.log("2");
+                    document.getElementById("msg").innerHTML = this.responseText;
+                    document.getElementById("detalhes").innerHTML = "";
+                } else
+                    if (this.readyState < 4) {
+                        console.log("3: " + this.readyState);
+                    } else
+                        console.log("Requisicao falhou: " + this.status);
+            }
+            console.log("4");
+
+            xmlhttp.open("POST", "http://localhost/3DAW/ExcluirPergDis.php");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(objJson);
+
+        }
+
+        function Validar(num){
+            const numRegex = /^([0-9]+$)/;
+        
+            let erros = [];
+
+            if (!numRegex.test(num)) {
+                erros.push("Número inválido.");
+            }
+
+            if (erros.length > 0) {
+                document.getElementById("msg").innerHTML = erros.join("<br>");
+                document.getElementById("msg").style.color = "red";
+                return false;
+            }
+
+            return true;
+        }
+
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h1>Exclusão de Perguntas discursivas.</h1>
+    <form method="POST" name="formPerg" id="formPerg">
+        <label for="num">Digite o Numero da Pergunta: </label>
+        <input type="text" name="num" id="num" required>
+        <input type="button" value="Procurar" onclick="return Buscar();">
+    </form>
+
+<p id="msg"></p>
+<table id="detalhes"></table>
+    
+</body>
+</html>
