@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Perguntas</title>
+    <script>
+
+        function ListarUmaPergunta(num, tipo) {
+            let xmlhttp = new XMLHttpRequest();
+            console.log("1");
+
+            if(!Validar(num, tipo)){
+                return;
+            }
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou a resposta OK: " + this.responseText);
+                    document.getElementById("msg").innerHTML = this.responseText;
+
+                    let objReturnJSON = JSON.parse(this.responseText);
+                    console.log("Resposta: " + this.responseText);
+                    console.log("pergunta: " + objReturnJSON.pergunta);
+                    CriarLinhaTabela(objReturnJSON);
+
+                } else
+                if (this.readyState < 4) {
+                    console.log("3: " + this.readyState);
+                } else
+                    console.log("Requisicao falhou: " + this.status);
+            }
+
+            console.log("4");
+            xmlhttp.open("GET", "BuscarPerg.php?num=" + num + "&tipo=" + tipo);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send();
+            console.log("enviei request get");
+            console.log("5");
+        }
+
+        function CriarLinhaTabela(pergunta) {
+            let tabela = document.getElementById("lst");
+            tabela.innerHTML = ""; 
+
+            for (let campo in pergunta) {
+                if (pergunta.hasOwnProperty(campo)) {
+                    let tr = document.createElement("tr");
+                    let tdChave = document.createElement("td");
+                    let tdValor = document.createElement("td");
+
+                
+                    let nomeCampo = campo.charAt(0).toUpperCase() + campo.slice(1);
+                
+                    tdChave.innerHTML = "<b>" + nomeCampo + ":</b>";
+                    tdValor.innerHTML = pergunta[campo];
+
+                    tr.appendChild(tdChave);
+                    tr.appendChild(tdValor);
+                    tabela.appendChild(tr);
+                }
+            }
+            console.log("Tabela atualizada com os dados do objeto.");
+        }
+        
+        function Validar(num, tipo){
+            const numRegex = /^([0-9]+$)/;
+            const tipoRegex = /^([1-2])$/;
+        
+            let erros = [];
+
+            if (!numRegex.test(num)) {
+                erros.push("Número inválido (use apenas números positivos e inteiros).");
+            }
+
+            if (!tipoRegex.test(tipo)) {
+                erros.push("Tipo de Pergunta inválida (Deve ser 1 para discursiva ou 2 para multipla escolha.)");
+            }
+
+            if (erros.length > 0) {
+                document.getElementById("msg").innerHTML = erros.join("<br>");
+                document.getElementById("msg").style.color = "red";
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h1>Listagem de Pergunta Unica.</h1>
+    <form method="POST">
+        <label for="num">Digite o tipo da Pergunta:(1 para discursiva/ 2 para multipla) </label>
+        <input type="text" name="tipo" id="tipo" required>
+        <label for="num">Digite o Numero da Pergunta: </label>
+        <input type="text" name="num" id="num" required>
+        <input type="button" value="Procurar" onclick="ListarUmaPergunta(document.getElementById('num').value, document.getElementById('tipo').value)">
+    </form>
+    <hr>
+    <h3>Dados da Pergunta: </h3>
+    <table id="lst">
+        <tr id="ultimaLinha">
+            <td colspan="4"></td>
+        </tr>
+    </table>
+<p id="msg"></p>       
+</body>
+</html>

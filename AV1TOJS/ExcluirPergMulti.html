@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluir Perguntas De Multipla.</title>
+    <script>
+        function Buscar() {
+            let num = document.getElementById("num").value;
+            
+            if (!Validar(num)) {
+                return;
+            }    
+
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    
+                    let perg = JSON.parse(this.responseText);
+                    
+                    if (perg && !perg.erro) {
+
+                        CriarForm(perg);
+
+                        document.getElementById("msg").innerHTML = "Registro encontrado.";
+                        document.getElementById("msg").style.color = "blue";
+                    } else {
+                        document.getElementById("minhaTabela").innerHTML = "";
+                        document.getElementById("msg").innerHTML = "Registro não encontrado.";
+                    }
+                }
+            };
+           
+            xmlhttp.open("GET", "BuscarPerg.php?num=" + num + "&tipo=" + 2);
+            xmlhttp.send();
+        }
+
+        function CriarForm(perg) {
+        
+            let tabela = document.getElementById("minhaTabela");
+            tabela.innerHTML = ""; 
+
+            let trCabeca = document.createElement("tr");
+    
+            let cabecalhos = ["ID", "Pergunta", "Opção 1", "Opção 2", "Opção 3", "Opção True"];
+            cabecalhos.forEach(texto => {
+                let th = document.createElement("th");
+                th.appendChild(document.createTextNode(texto));
+                trCabeca.appendChild(th);
+            });
+
+            tabela.appendChild(trCabeca);
+
+            let trCorpo = document.createElement("tr");
+
+            let tdId = document.createElement("td");
+            let inputId = document.createElement("input");
+            inputId.type = "text";
+            inputId.id = "idAlt";
+            inputId.value = perg.id;
+            inputId.readOnly = true;
+            tdId.appendChild(inputId);
+
+            let tdPerg = document.createElement("td");
+            let inputPerg = document.createElement("input");
+            inputPerg.type = "text";
+            inputPerg.id = "pergAlt";
+            inputPerg.value = perg.pergunta;
+            inputPerg.readOnly = true;
+            tdPerg.appendChild(inputPerg);
+
+            let tdOp1 = document.createElement("td");
+            let inputOp1 = document.createElement("input");
+            inputOp1.type = "text";
+            inputOp1.id = "op1Alt";
+            inputOp1.value = perg.opcao1;
+            inputOp1.readOnly = true;
+            tdOp1.appendChild(inputOp1);
+
+            let tdOp2 = document.createElement("td");
+            let inputOp2 = document.createElement("input");
+            inputOp2.type = "text";
+            inputOp2.id = "op2Alt";
+            inputOp2.value = perg.opcao2;
+            inputOp2.readOnly = true;
+            tdOp2.appendChild(inputOp2);
+
+            let tdOp3 = document.createElement("td");
+            let inputOp3 = document.createElement("input");
+            inputOp3.type = "text";
+            inputOp3.id = "op3Alt";
+            inputOp3.value = perg.opcao3;
+            inputOp3.readOnly = true;
+            tdOp3.appendChild(inputOp3);
+
+            let tdOpTrue = document.createElement("td");
+            let inputOpTrue = document.createElement("input");
+            inputOpTrue.type = "text";
+            inputOpTrue.id = "opTrueAlt";
+            inputOpTrue.value = perg.opcaotrue;
+            inputOpTrue.readOnly = true;
+            tdOpTrue.appendChild(inputOpTrue);
+
+            let tdAcao = document.createElement("td");
+            let btn = document.createElement("button");
+            btn.innerHTML = "Excluir Registro?";
+            btn.onclick = function() { Excluir(); };
+            tdAcao.appendChild(btn);
+
+            trCorpo.appendChild(tdId);
+            trCorpo.appendChild(tdPerg);
+            trCorpo.appendChild(tdOp1);
+            trCorpo.appendChild(tdOp2);
+            trCorpo.appendChild(tdOp3);
+            trCorpo.appendChild(tdOpTrue);
+            trCorpo.appendChild(tdAcao);
+
+            tabela.appendChild(trCorpo);
+        }
+
+        function Excluir() {
+            let id = document.getElementById("num").value; 
+            let objForm = {"numero": id };
+            let objJson = JSON.stringify(objForm);
+
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let res = JSON.parse(this.responseText);
+                    document.getElementById("msg").innerHTML = res.mensagem;
+                    document.getElementById("msg").style.color = "green";
+                }
+            };
+        
+        xmlhttp.open("POST", "ExcluirPergMulti.php"); 
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(objJson);
+        }
+
+        function Validar(num){
+            const numRegex = /^([0-9]+$)/;
+        
+            let erros = [];
+
+            if (!numRegex.test(num)) {
+                erros.push("Número inválido.");
+            }
+
+            if (erros.length > 0) {
+                document.getElementById("msg").innerHTML = erros.join("<br>");
+                document.getElementById("msg").style.color = "red";
+                return false;
+            }
+
+            return true;
+        }
+
+    </script>
+</head>
+<body>
+    <button><a href="main.html">Voltar</a></button>
+    <h1>Exclusão de Perguntas de Multipla Escolha.</h1>
+    <form method="POST" name="formPerg" id="formPerg">
+        <label for="num">Digite o Numero da Pergunta: </label>
+        <input type="text" name="num" id="num" required>
+        <input type="button" value="Procurar" onclick="return Buscar();">
+    </form>
+
+<p id="msg"></p>
+<table id="minhaTabela"></table>
+    
+</body>
+</html>

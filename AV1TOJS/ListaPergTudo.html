@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function ListarPerguntas() {
+            let xmlhttp = new XMLHttpRequest();
+            console.log("1");
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou a resposta OK: " + this.responseText);
+                    console.log("2");
+                    document.getElementById("msg").innerHTML = this.responseText;
+
+                    let objReturnJSON = JSON.parse(this.responseText);
+                    console.log("Resposta: " + this.responseText);
+
+                    document.getElementById("lst1").innerHTML = '<tr id="ultimaLinha1"><td colspan="4"></td></tr>';
+                    document.getElementById("lst2").innerHTML = '<tr id="ultimaLinha2"><td colspan="4"></td></tr>';
+                    
+                    for (let i=0; i<objReturnJSON.length; i++) {
+                        let linha = objReturnJSON[i];
+
+                        if (linha.tipo === "Discursiva") {
+                            CriarLinhaTabela(linha, "ultimaLinha1");
+                        } else {
+                            CriarLinhaTabela(linha, "ultimaLinha2");
+                        }
+                    }
+                } else
+                    if (this.readyState < 4) {
+                        console.log("3: " + this.readyState);
+                    } else
+                        console.log("Requisicao falhou: " + this.status);
+            }
+            console.log("4");
+      
+      xmlhttp.open("GET", "ListaPergTudo.php");
+      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xmlhttp.send();
+      // xmlhttp.send();
+      console.log("enviei request get");
+      console.log("5");
+    }
+
+    function CriarLinhaTabela(obj, alvo) {
+        let tr = document.createElement("tr");
+
+        let tdId = document.createElement("td");
+        tdId.textContent = obj.id;
+        tr.appendChild(tdId);
+
+        let tdPerg = document.createElement("td");
+        tdPerg.textContent = obj.pergunta;
+        tr.appendChild(tdPerg);
+
+        let tdResp = document.createElement("td");
+        tdResp.textContent = obj.gabarito; // Pega o que definimos no PHP
+        tdResp.style.fontWeight = "bold";
+        tdResp.style.color = "green";
+        tr.appendChild(tdResp);
+
+        let tr_fim = document.getElementById(alvo);
+        if (tr_fim) {
+            tr_fim.parentNode.insertBefore(tr, tr_fim);
+        }
+    }
+    </script>
+</head>
+<body onload="ListarPerguntas()">
+    <button><a href="main.html">Voltar</a></button>
+    <h3>Dados da Pergunta: </h3>
+
+     <h2>---Perguntas Discursivas---</h2>
+    <table id="lst1">
+        <tr id="ultimaLinha1">
+            <td colspan="4"></td>
+        </tr>
+    </table>
+
+     <h2>---Perguntas de Multipla Escolha---</h2>
+     <table id="lst2">
+        <tr id="ultimaLinha2">
+            <td colspan="4"></td>
+        </tr>
+     </table>   
+<p id="msg"></p>  
+</body>
+</html>
