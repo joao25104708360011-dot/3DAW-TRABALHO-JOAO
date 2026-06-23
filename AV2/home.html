@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>BEAUTIES - Home</title>
+    <link rel="stylesheet" href="estilo.css">
+    <script>
+        let slideAtual = 0;
+
+        function MoverCarrossel(direcao) {
+            const slides = document.getElementById("slides");
+            
+            slideAtual += direcao;
+
+            if (slideAtual > 2) { 
+                slideAtual = 0; 
+            }
+            
+            if (slideAtual < 0) { 
+                slideAtual = 2; 
+            }
+
+            slides.style.transform = `translateX(${-slideAtual * 100}%)`;
+        }
+
+        function Deslogar() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="LogoBeauties.png" alt="Logo Beauties" class="logo">
+        <p style="margin-bottom: 20px; color: #aaa;">Bem-vinda de volta!</p>
+
+        <div class="carrossel-container">
+            <div class="carrossel-slides" id="slides">
+                <div class="slide slide1"> Combo Estética Facial - 20% OFF</div>
+                <div class="slide slide2"> Agende Pé e Mão essa semana!</div>
+                <div class="slide slide3"> Planos e Pacotes Exclusivos</div>
+            </div>
+            <button type="button" class="btn-carrossel btn-esq" onclick="MoverCarrossel(-1)">❮</button>
+            <button type="button" class="btn-carrossel btn-dir" onclick="MoverCarrossel(1)">❯</button>
+        </div>
+
+        <h2>O que deseja fazer hoje?</h2>
+        
+        <div class="menu-rapido">
+            <button type="button" class="btn-principal" onclick="window.location.href='servicos.html'">
+                 Agendar Serviço
+            </button>
+            
+            <button type="button" class="btn-principal" style="background-color: #333;" onclick="alert('Não terminei ainda.')">
+                 Ver Planos
+            </button>
+        </div>
+
+        <button type="button" class="btn-principal" style="background-color: #b32424; margin-top: 30px; padding: 10px;" onclick="Deslogar()">
+            Sair da Conta
+        </button>
+    </div>
+</body>
+</html>

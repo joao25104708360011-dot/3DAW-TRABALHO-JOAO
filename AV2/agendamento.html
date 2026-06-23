@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Agendar Horário</title>
+    <link rel="stylesheet" href="estilo.css">
+    <script>
+        function Inicializar() {
+            document.getElementById("txtServico").textContent = sessionStorage.getItem("servico_nome");
+        }
+
+        function Agendar() {
+            let usuario_id = sessionStorage.getItem("usuario_id");
+            let servico_id = sessionStorage.getItem("servico_id");
+            let data = document.getElementById("data").value;
+            let horario = document.getElementById("horario").value;
+
+            let dados = JSON.stringify({"id_usuario": usuario_id, "id_servico": servico_id, "data_agendada": data, "horario": horario});
+
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let res = JSON.parse(this.responseText);
+                    document.getElementById("msg").innerHTML = res.mensagem;
+                    document.getElementById("msg").style.color = "green";
+                }
+            };
+            xmlhttp.open("POST", "SalvarAgendamento.php");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(dados);
+        }
+    </script>
+</head>
+<body onload="Inicializar()">
+    <div class="container">
+        <h2>Confirmar Horário</h2>
+        <p style="margin-bottom:20px; color:#aaa;">Serviço: <strong id="txtServico" style="color:#fff;">-</strong></p>
+        
+        <div class="grupo-campo">
+            <label>Escolha a Data</label>
+            <input type="date" id="data">
+        </div>
+        
+        <div class="grupo-campo">
+            <label>Escolha o Horário</label>
+            <select id="horario">
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+            </select>
+        </div>
+
+        <button class="btn-principal" onclick="Agendar()">Finalizar</button>
+        <p id="msg"></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Nossos Serviços</title>
+    <link rel="stylesheet" href="estilo.css">
+    <script>
+        function CarregarServicos() {
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let servicos = JSON.parse(this.responseText);
+                    let grid = document.getElementById("grid");
+                    grid.innerHTML = "";
+
+                    for (let i = 0; i < servicos.length; i++) {
+                        let servico = servicos[i];
+                        let card = document.createElement("div");
+                        card.className = "card-servico";
+
+                        card.innerHTML = `
+                            <h3>${servico.nome}</h3>
+                            <p class="preco">R$ ${servico.preco}</p>
+                            <p class="duracao"> ${servico.duracao}</p>
+                            <button class="btn-principal" onclick="Escolher(${servico.id}, '${servico.nome}')">Escolher</button>
+                        `;
+                        grid.appendChild(card);
+                    }
+                }
+            };
+            xmlhttp.open("GET", "ListarServicos.php");
+            xmlhttp.send();
+        }
+
+        function Escolher(id, nome) {
+            sessionStorage.setItem("servico_id", id);
+            sessionStorage.setItem("servico_nome", nome);
+            window.location.href = "agendamento.html";
+        }
+    </script>
+</head>
+<body onload="CarregarServicos()">
+    <div class="container container-largo">
+        <h2>Selecione o Procedimento</h2>
+        <div class="grid-servicos" id="grid"></div>
+    </div>
+</body>
+</html>
