@@ -157,3 +157,36 @@ select {
     margin: 0 auto 15px auto;
     display: block;
 }
+
+.topo-home {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.icon-perfil {
+    width: 35px;
+    height: 35px;
+    background-color: #333;
+    cursor: pointer;
+    border: 1px solid #444;
+    flex-shrink: 0; 
+    align-self: center; 
+}
+
+.perfil-info {
+    text-align: left;
+    background-color: #333;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.perfil-info p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.perfil-info strong {
+    color: #ff007f;
+}
