@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Perfil</title>
+    <link rel="stylesheet" href="estilo.css">
+    <script>
+        function CarregarPerfil() {
+            let id = sessionStorage.getItem("usuario_id");
+            let dados = JSON.stringify({"id": id});
+
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let res = JSON.parse(this.responseText);
+                    if(res.status === "sucesso") {
+                        document.getElementById("nomeUser").textContent = res.usuario.nome;
+                        document.getElementById("emailUser").textContent = res.usuario.email;
+                    }
+                }
+            };
+            xmlhttp.open("POST", "BuscarPerfil.php");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(dados);
+        }
+    </script>
+</head>
+<body onload="CarregarPerfil()">
+    <div class="container">
+        <h2>Meu Perfil</h2>
+        
+        <div class="perfil-info">
+            <p>Nome: <strong id="nomeUser">...</strong></p>
+            <p>E-mail: <strong id="emailUser">...</strong></p>
+        </div>
+
+        <button type="button" class="btn-principal" onclick="alert('Ainda não terminei.')">
+            Editar Dados
+        </button>
+
+        <button type="button" class="btn-principal" style="background-color: #333; margin-top: 15px;" onclick="window.location.href='home.html'">
+            Voltar
+        </button>
+    </div>
+</body>
+</html>
