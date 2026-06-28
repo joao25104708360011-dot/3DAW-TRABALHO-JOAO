@@ -12,7 +12,7 @@
     
     $conn = new mysqli($servidor, $username, $senha_bd, $database);
 
-    $sql = "SELECT nome, email FROM usuarios WHERE id = '$id'";
+    $sql = "SELECT nome, email, plano FROM usuarios WHERE id = '$id'";
     $resultado = $conn->query($sql);
 
     if ($resultado->num_rows > 0) {
