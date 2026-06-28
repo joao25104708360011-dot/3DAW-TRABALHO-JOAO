@@ -29,6 +29,80 @@
     </script>
 </head>
 <body>
+    <div class="container" style="position: relative; padding-top: 40px;">
+        <img src="user.png" alt="Perfil" class="icon-perfil" onclick="window.location.href='perfil.html'" style="position: absolute; top: 15px; right: 15px; width: 35px; height: 35px; min-width: 35px; min-height: 35px; background-color: #333; border: 1px solid #444; cursor: pointer; display: block; z-index: 20;">
+        <div class="topo-home" style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
+            <img src="LogoBeauties.png" alt="Logo Beauties" class="logo-app" style="width: 200px; height: 200px; margin: 0; object-fit: contain;">
+        </div>
+        
+        <p style="margin-bottom: 20px; color: #aaa; text-align: left;">Bem vindo!</p>
+
+        <div class="carrossel-container">
+            <div class="carrossel-slides" id="slides">
+                <div class="slide slide1"> Combo Estética Facial - 20% OFF</div>
+                <div class="slide slide2"> Agende Pé e Mão essa semana!</div>
+                <div class="slide slide3"> Planos e Pacotes Exclusivos</div>
+            </div>
+            <button type="button" class="btn-carrossel btn-esq" onclick="MoverCarrossel(-1)">❮</button>
+            <button type="button" class="btn-carrossel btn-dir" onclick="MoverCarrossel(1)">❯</button>
+        </div>
+
+        <h2 style="font-size: 18px; text-align: left; margin-bottom: 10px;">O que deseja fazer hoje?</h2>
+        
+        <div class="menu-rapido" style="grid-template-columns: 1fr; gap: 10px;">
+            <button type="button" class="btn-principal" onclick="window.location.href='servicos.html'">
+                 Agendar Novo Serviço
+            </button>
+            
+            <button type="button" class="btn-principal" style="background-color: #333;" onclick="window.location.href='meusAgendamentos.html'">
+                 Ver Meus Agendamentos
+            </button>
+
+            <button type="button" class="btn-principal" style="background-color: #333;" onclick="window.location.href='planos.html'">
+                 Ver Planos de Assinatura
+            </button>
+
+            <button type="button" class="btn-principal" style="background-color: #333;" onclick="window.location.href='avaliacoes.html'">
+                 Avaliações e Feedbacks
+            </button>
+        </div>
+
+        <button type="button" class="btn-principal" style="background-color: #b32424; margin-top: 30px; padding: 10px;" onclick="Deslogar()">
+            Sair da Conta
+        </button>
+    </div>
+</body>
+</html><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>BEAUTIES - Home</title>
+    <link rel="stylesheet" href="estilo.css">
+    <script>
+        let slideAtual = 0;
+
+        function MoverCarrossel(direcao) {
+            const slides = document.getElementById("slides");
+            
+            slideAtual += direcao;
+
+            if (slideAtual > 2) { 
+                slideAtual = 0; 
+            }
+            if (slideAtual < 0) { 
+                slideAtual = 2; 
+            }
+
+            slides.style.transform = `translateX(${-slideAtual * 100}%)`;
+        }
+
+        function Deslogar() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+</head>
+<body>
     <div class="container">
         <img src="user.png" alt="Perfil" class="icon-perfil" onclick="window.location.href='perfil.html'" style="position: relative; top: 15px; right: 15px; width: 35px; height: 35px; min-width: 35px; min-height: 35px; background-color: #333; border: 1px solid #444; cursor: pointer; display: block; z-index: 20;">
 
