@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Avaliações do Centro</title>
+    <link rel="stylesheet" href="estilo.css">
+    <script>
+        function CarregarAvaliacoes() {
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let avaliacoes = JSON.parse(this.responseText);
+                    let container = document.getElementById("lista-feedbacks");
+                    container.innerHTML = "";
+                    
+                    avaliacoes.forEach(function(item) {
+                        let estrelas = "⭐".repeat(item.nota);
+                        container.innerHTML += `
+                            <div class="card-servico" style="margin-bottom: 10px;">
+                                <h3>${item.nome} - ${estrelas}</h3>
+                                <p style="color: #ccc; font-size: 14px;">"${item.comentario}"</p>
+                            </div>
+                        `;
+                    });
+                }
+            };
+            xmlhttp.open("GET", "ListarAvaliacoes.php");
+            xmlhttp.send();
+        }
+
+        function EnviarAvaliacao() {
+            let idUser = sessionStorage.getItem("usuario_id");
+            let nota = document.getElementById("nota").value;
+            let comentario = document.getElementById("comentario").value;
+
+            if(!idUser) { 
+                alert("Faça login primeiro!"); 
+                return; 
+            }
+
+            let dados = JSON.stringify({ "id_usuario": idUser, "nota": nota, "comentario": comentario });
+
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let res = JSON.parse(this.responseText);
+                    if(res.status === "sucesso") {
+                        alert("Obrigado pela avaliação!");
+                        document.getElementById("comentario").value = "";
+                        CarregarAvaliacoes();
+                    }
+                }
+            };
+            xmlhttp.open("POST", "SalvarAvaliacao.php");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(dados);
+        }
+    </script>
+</head>
+<body onload="CarregarAvaliacoes()">
+    <div class="container">
+        <h2>Avaliações da Comunidade</h2>
+        
+        <div class="perfil-info" style="text-align: left;">
+            <label>Sua Nota (1 a 5):</label>
+            <select id="nota" style="margin-bottom: 10px;">
+                <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
+                <option value="4">⭐⭐⭐⭐ (Muito Bom)</option>
+                <option value="3">⭐⭐⭐ (Regular)</option>
+                <option value="2">⭐⭐ (Ruim)</option>
+                <option value="1">⭐ (Péssimo)</option>
+            </select>
+
+            <label>Comentário:</label>
+            <input type="text" id="comentario" placeholder="O que achou do nosso espaço?">
+            
+            <button type="button" class="btn-principal" style="margin-top: 10px;" onclick="EnviarAvaliacao()">Enviar Feedback</button>
+        </div>
+
+        <h3>O que dizem sobre nós:</h3>
+        <div id="lista-feedbacks" style="margin-top: 15px; max-height: 250px; overflow-y: auto;"></div>
+
+        <button type="button" class="btn-principal" style="background-color: #333; margin-top: 15px;" onclick="window.location.href='home.html'">Voltar</button>
+    </div>
+</body>
+</html>
