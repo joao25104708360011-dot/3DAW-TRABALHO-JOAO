@@ -2,8 +2,40 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>BEAUTIES - Nossos Planos</title>
+    <title>BEAUTÉ - Nossos Planos</title>
     <link rel="stylesheet" href="estilo.css">
+    <script>
+        function EscolherPlano(nomePlano) {
+            let idUsuario = sessionStorage.getItem("usuario_id");
+
+            if (!idUsuario) {
+                alert("Erro: Usuário não identificado. Faça o login novamente.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            let dados = JSON.stringify({
+                "id": idUsuario,
+                "plano": nomePlano
+            });
+
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let res = JSON.parse(this.responseText);
+                    if (res.status === "sucesso") {
+                        alert("Parabéns! Você agora é assinante do " + nomePlano);
+                        window.location.href = "home.html";
+                    } else {
+                        alert("Erro ao salvar plano: " + res.mensagem);
+                    }
+                }
+            };
+            xmlhttp.open("POST", "SalvarPlano.php");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(dados);
+        }
+    </script>
 </head>
 <body>
     <div class="container container-largo">
@@ -11,25 +43,25 @@
         <p style="margin-bottom: 20px; color: #ccc;">Escolha o plano ideal para você economizar todo mês</p>
 
         <div class="grid-servicos">
-            <div class="card-servico">
-                <h3>Plano Bronze</h3>
-                <p class="preco">R$ 89,90<span style="font-size: 12px; color: #999;"> /mês</span></p>
-                <p class="duracao">Incluso: 1 Pé e Mão + 1 Design de Sobrancelha</p>
-                <button type="button" class="btn-principal" onclick="alert('Plano Bronze selecionado!')">Assinar</button>
+            <div class="card-servico" style="background-color: #4a353d; border: 1px solid #7c5364;">
+                <h3 style="color: #e5b3c9;">Plano Bronze</h3>
+                <p class="preco" style="color: #fff;">R$ 89,90<span style="font-size: 12px; color: #ccc;"> /mês</span></p>
+                <p class="duracao" style="color: #e5b3c9;">Incluso: 1 Pé e Mão + 1 Design de Sobrancelha</p>
+                <button type="button" class="btn-principal" style="background-color: #7c5364;" onclick="EscolherPlano('Bronze')">Assinar</button>
             </div>
 
-            <div class="card-servico" style="border: 1px solid #ff007f;">
-                <h3>Plano Gold (Recomendado)</h3>
-                <p class="preco">R$ 159,90<span style="font-size: 12px; color: #999;"> /mês</span></p>
-                <p class="duracao">Incluso: 2 Pé e Mão + 1 Limpeza de Pele + 10% OFF em outros serviços</p>
-                <button type="button" class="btn-principal" onclick="alert('Plano Gold selecionado!')">Assinar</button>
+            <div class="card-servico" style="background-color: #222; border: 2px solid #b59410;">   
+                <h3 style="color: #c9a227; font-weight: bold; text-shadow: 1px 1px 0px rgba(0,0,0,0.5);">Plano Ouro ★★★</h3> 
+                <p class="preco" style="color: #b59410;">R$ 159,90<span style="font-size: 12px; color: #999;"> /mês</span></p> 
+                <p class="duracao" style="color: #c9a227;">Incluso: 2 Pé e Mão + 1 Limpeza de Pele + <span style="font-weight: bold;">10% OFF</span> em outros serviços</p>
+                <button type="button" class="btn-principal" style="background-color: #8c7310; color: white;" onclick="EscolherPlano('Ouro')">Assinar Destaque</button>
             </div>
 
-            <div class="card-servico">
-                <h3>Plano Platinum</h3>
-                <p class="preco">R$ 299,90<span style="font-size: 12px; color: #999;"> /mês</span></p>
-                <p class="duracao">Incluso: Serviços livres de manicure/pedicure + 2 Massagens + Escova semanal</p>
-                <button type="button" class="btn-principal" onclick="alert('Plano Platinum selecionado!')">Assinar</button>
+            <div class="card-servico" style="background-color: #353b4a; border: 1px solid #53627c;">
+                <h3 style="color: #b3c2e5;">Plano Prata</h3>
+                <p class="preco" style="color: #fff;">R$ 119,90<span style="font-size: 12px; color: #ccc;"> /mês</span></p>
+                <p class="duracao" style="color: #b3c2e5;">Incluso: 2 Pé e Mão + 1 Design de Sobrancelha</p>
+                <button type="button" class="btn-principal" style="background-color: #53627c;" onclick="EscolherPlano('Prata')">Assinar</button>
             </div>
         </div>
 
