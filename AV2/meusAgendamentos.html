@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Agendamentos</title>
+    <link rel="stylesheet" href="estilo.css">
+    <script>
+        function CarregarMinhaAgenda() {
+            let idUser = sessionStorage.getItem("usuario_id");
+            if(!idUser){ 
+                return;
+            }
+
+            let dados = JSON.stringify({ "id_usuario": idUser });
+
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let agendamentos = JSON.parse(this.responseText);
+                    let container = document.getElementById("lista-agenda");
+                    container.innerHTML = "";
+
+                    if(agendamentos.length === 0) {
+                        container.innerHTML = "<p style='color: #888;'>Nenhum agendamento marcado.</p>";
+                        return;
+                    }
+
+                    agendamentos.forEach(function(item) {
+                        let corStatus = item.status === "Confirmado" ? "#00ff7f" : "#ff007f";
+                        container.innerHTML += `
+                            <div class="card-servico" style="margin-bottom: 12px; border-left: 4px solid ${corStatus}; text-align: left; padding: 15px;">
+                                <h3 style="margin: 0 0 5px 0;"> ${item.servico}</h3>
+                                <p class="duracao" style="margin: 0 0 5px 0; color: #ccc;">Horário: ${item.data_agendada} às ${item.horario}</p>
+                                <span style="color: ${corStatus}; font-weight: bold; font-size: 13px;"> Status: ${item.status}</span>
+                            </div>
+                        `;
+                    });
+                }
+            };
+            xmlhttp.open("POST", "ListarAgendamentos.php");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(dados);
+        }
+    </script>
+</head>
+<body onload="CarregarMinhaAgenda()">
+    <div class="container">
+        <h2>Minha Agenda</h2>
+        <p style="margin-bottom: 20px; color: #ccc;">Acompanhe seus horários marcados</p>
+
+        <div id="lista-agenda"></div>
+
+        <button type="button" class="btn-principal" style="background-color: #333; margin-top: 20px;" onclick="window.location.href='home.html'">Voltar para Home</button>
+    </div>
+</body>
+</html>
