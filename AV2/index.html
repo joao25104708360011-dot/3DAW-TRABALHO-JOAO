@@ -2,25 +2,42 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Centro de Estética - Login</title>
+    <title>BEAUTIES - Login</title>
     <link rel="stylesheet" href="estilo.css">
     <script>
+        function AlternarFormularios() {
+            const formLogin = document.getElementById("bloco-login");
+            const formCadastro = document.getElementById("bloco-cadastro");
+
+            if (formLogin.style.display === "none") {
+                formLogin.style.display = "block";
+                formCadastro.style.display = "none";
+            } else {
+                formLogin.style.display = "none";
+                formCadastro.style.display = "block";
+            }
+        }
+
         function Logar() {
-            let email = document.getElementById("email").value;
-            let senha = document.getElementById("senha").value;
+            let email = document.getElementById("emailLogin").value;
+            let senha = document.getElementById("senhaLogin").value;
 
-            let dados = JSON.stringify({"email": email, "senha": senha});
+            if(!email || !senha) { 
+                alert("Preencha todos os campos!"); 
+                return; 
+            }
+
+            let dados = JSON.stringify({ "email": email, "senha": senha });
             let xmlhttp = new XMLHttpRequest();
-
             xmlhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     let res = JSON.parse(this.responseText);
-                    if (res.status === "sucesso") {
-                        sessionStorage.setItem("usuario_id", res.usuario.id);
+                    if(res.status === "sucesso") {
+                        sessionStorage.setItem("usuario_id", res.id);
+                        sessionStorage.setItem("usuario_nome", res.nome);
                         window.location.href = "home.html";
                     } else {
-                        document.getElementById("msg").innerHTML = res.mensagem;
-                        document.getElementById("msg").style.color = "red";
+                        alert(res.mensagem);
                     }
                 }
             };
@@ -28,23 +45,60 @@
             xmlhttp.setRequestHeader("Content-Type", "application/json");
             xmlhttp.send(dados);
         }
+
+        function Cadastrar() {
+            let nome = document.getElementById("nomeCad").value;
+            let email = document.getElementById("emailCad").value;
+            let senha = document.getElementById("senhaCad").value;
+
+            if(!nome || !email || !senha) { 
+                alert("Preencha todos os campos para cadastrar!"); 
+                return; 
+            }
+
+            let dados = JSON.stringify({ "nome": nome, "email": email, "senha": senha });
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let res = JSON.parse(this.responseText);
+                    alert(res.mensagem);
+                    if(res.status === "sucesso") {
+                        AlternarFormularios();
+                    }
+                }
+            };
+            xmlhttp.open("POST", "Cadastrar.php");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(dados);
+        }
     </script>
 </head>
 <body>
     <div class="container">
-        <img src="LogoBeauties.png" alt="Logo Beauties" class="logo">
+        <h2>BEAUTIES</h2>
+        
+        <div id="bloco-login" style="display: block; width: 100%;">
+            <p style="margin-bottom: 20px; color: #ccc;">Acesse sua conta</p>
+            <input type="email" id="emailLogin" placeholder="E-mail" style="width: 100%; margin-bottom: 10px;">
+            <input type="password" id="senhaLogin" placeholder="Senha" style="width: 100%; margin-bottom: 15px;">
+            <button type="button" class="btn-principal" onclick="Logar()">Entrar</button>
+            
+            <p style="margin-top: 25px; color: #aaa; font-size: 14px; cursor: pointer; text-decoration: underline;" onclick="AlternarFormularios()">
+                Não tem uma conta? Cadastre-se aqui
+            </p>
+        </div>
 
-        <h2>Login</h2>
-        <div class="grupo-campo">
-            <label>E-mail</label>
-            <input type="email" id="email" placeholder="cliente@teste.com">
+        <div id="bloco-cadastro" style="display: none; width: 100%;">
+            <p style="margin-bottom: 20px; color: #00ff7f;">Crie sua conta gratuitamente</p>
+            <input type="text" id="nomeCad" placeholder="Nome Completo" style="width: 100%; margin-bottom: 10px;">
+            <input type="email" id="emailCad" placeholder="Seu Melhor E-mail" style="width: 100%; margin-bottom: 10px;">
+            <input type="password" id="senhaCad" placeholder="Crie uma Senha" style="width: 100%; margin-bottom: 15px;">
+            <button type="button" class="btn-principal" style="background-color: #00ff7f; color: #000;" onclick="Cadastrar()">Finalizar Cadastro</button>
+            
+            <p style="margin-top: 25px; color: #aaa; font-size: 14px; cursor: pointer; text-decoration: underline;" onclick="AlternarFormularios()">
+                Já tem uma conta? Faça login
+            </p>
         </div>
-        <div class="grupo-campo">
-            <label>Senha</label>
-            <input type="password" id="senha" placeholder="******">
-        </div>
-        <button class="btn-principal" onclick="Logar()">Entrar</button>
-        <p id="msg"></p>
     </div>
 </body>
 </html>
