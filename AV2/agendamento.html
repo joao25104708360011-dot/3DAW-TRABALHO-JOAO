@@ -12,17 +12,34 @@
         function Agendar() {
             let usuario_id = sessionStorage.getItem("usuario_id");
             let servico_id = sessionStorage.getItem("servico_id");
+            let forma_pagamento = sessionStorage.getItem("forma_pagamento");
             let data = document.getElementById("data").value;
             let horario = document.getElementById("horario").value;
 
-            let dados = JSON.stringify({"id_usuario": usuario_id, "id_servico": servico_id, "data_agendada": data, "horario": horario});
+            if (!data || !horario) {
+                alert("Por favor, preencha a data e o horário.");
+                return;
+            }
+
+            let dados = JSON.stringify({
+                "id_usuario": usuario_id,
+                "id_servico": servico_id,
+                "data_agendada": data,
+                "horario": horario,
+                "forma_pagamento": forma_pagamento
+            });
 
             let xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     let res = JSON.parse(this.responseText);
-                    document.getElementById("msg").innerHTML = res.mensagem;
-                    document.getElementById("msg").style.color = "green";
+                    if (res.status === "sucesso") {
+                        alert(res.mensagem);
+                        window.location.href = "home.html";
+                    } else {
+                        document.getElementById("msg").innerHTML = res.mensagem;
+                        document.getElementById("msg").style.color = "red";
+                    }
                 }
             };
             xmlhttp.open("POST", "SalvarAgendamento.php");
@@ -44,6 +61,7 @@
         <div class="grupo-campo">
             <label>Escolha o Horário</label>
             <select id="horario">
+                <option value="">Selecione...</option>
                 <option value="09:00">09:00</option>
                 <option value="10:00">10:00</option>
                 <option value="14:00">14:00</option>
@@ -51,8 +69,10 @@
             </select>
         </div>
 
-        <button class="btn-principal" onclick="Agendar()">Finalizar</button>
-        <p id="msg"></p>
+        <p id="msg" style="margin-bottom: 15px; font-weight: bold;"></p>
+
+        <button type="button" class="btn-principal" onclick="Agendar()">Confirmar Agendamento</button>
+        <button type="button" class="btn-principal" style="background-color: #333; margin-top: 10px;" onclick="window.location.href='servicos.html'">Voltar</button>
     </div>
 </body>
 </html>
