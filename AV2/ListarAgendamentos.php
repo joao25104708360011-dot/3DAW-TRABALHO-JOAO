@@ -17,10 +17,10 @@
         exit();
     }
 
-    $sql = "SELECT s.nome AS servico, a.data_agendada, a.horario, a.status 
+    $sql = "SELECT s.nome AS servico, s.preco, a.data_agendada, a.horario, a.forma_pagamento, a.status 
             FROM agendamentos a 
             INNER JOIN servicos s ON a.id_servico = s.id 
-            WHERE a.id_usuario = '$id_usuario' 
+            WHERE a.id_usuario = '$id_usuario'             
             ORDER BY a.data_agendada DESC, a.horario DESC";
 
     $resultado = $conn->query($sql);
