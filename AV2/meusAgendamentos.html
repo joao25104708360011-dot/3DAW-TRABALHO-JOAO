@@ -28,10 +28,11 @@
                     agendamentos.forEach(function(item) {
                         let corStatus = item.status === "Confirmado" ? "#00ff7f" : "#ff007f";
                         container.innerHTML += `
-                            <div class="card-servico" style="margin-bottom: 12px; border-left: 4px solid ${corStatus}; text-align: left; padding: 15px;">
-                                <h3 style="margin: 0 0 5px 0;"> ${item.servico}</h3>
+                            <div class="card-servico" style="margin-bottom: 12px; padding: 15px; border-left: 4px solid ${corStatus}; text-align: left;">
+                                <h3 style="margin: 0 0 5px 0;">🗓️ ${item.servico} <span style="color: #ff007f; float: right;">R$ ${item.preco}</span></h3>
                                 <p class="duracao" style="margin: 0 0 5px 0; color: #ccc;">Horário: ${item.data_agendada} às ${item.horario}</p>
-                                <span style="color: ${corStatus}; font-weight: bold; font-size: 13px;"> Status: ${item.status}</span>
+                                <p style="margin: 0 0 5px 0; font-size: 13px; color: #aaa;">💳 Pagamento: ${item.forma_pagamento || 'Não especificado'}</p>
+                                <span style="color: ${corStatus}; font-weight: bold; font-size: 13px;">● Status: ${item.status}</span>
                             </div>
                         `;
                     });
